@@ -1,0 +1,4 @@
+time="2025-03-06 00:24:24" level=info msg="Http Request" agent=PostmanRuntime-ApipostRuntime/1.1.0 ip=127.0.0.1 latency=1.8541ms method=POST status=200 uri=/api/v1/users/upload
+time="2025-03-07 16:50:37" level=info msg="Http Request" agent=PostmanRuntime-ApipostRuntime/1.1.0 ip=127.0.0.1 latency=0s method=POST status=200 uri=/api/v1/users/add
+time="2025-03-07 16:52:34" level=info msg="Http Request" agent=PostmanRuntime-ApipostRuntime/1.1.0 ip=127.0.0.1 latency="526.8µs" method=POST status=200 uri=/api/v1/users/add
+time="2025-03-07 16:54:47" level=info msg="Http Request" agent=PostmanRuntime-ApipostRuntime/1.1.0 ip=127.0.0.1 latency=0s method=POST status=200 uri=/api/v1/users/add
