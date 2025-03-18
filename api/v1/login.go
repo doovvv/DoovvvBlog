@@ -4,7 +4,6 @@ import (
 	"doovvvblog/middleware"
 	"doovvvblog/model"
 	"doovvvblog/utils/errmsg"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,10 +12,10 @@ import (
 func Login(c *gin.Context) {
 	var user model.User
 	var token string
-	fmt.Println("login")
+	// fmt.Println("login")
 	c.ShouldBindJSON(&user)
 	code := model.CheckLogin(user.Username, user.Password)
-	fmt.Println("login")
+	// fmt.Println("login")
 	if code == errmsg.SUCCESS {
 		token, _ = middleware.CreateJwt(user.Username, user.Password)
 	}

@@ -28,7 +28,7 @@ func InitRouter() {
 		{
 			visitorUser.POST("/add", v1.AddUser)
 			visitorUser.GET("", v1.GetUsers)
-			visitorUser.GET("/:id", v1.GetUser)
+			// visitorUser.GET("/:id", v1.GetUser)
 			visitorUser.POST("/login", v1.Login)
 		}
 		authCate := auth.Group("/category")

@@ -12,6 +12,10 @@ import (
 
 // 查询用户列表
 func GetUsers(c *gin.Context) {
+	userName, ok := c.GetQuery("username")
+	if !ok {
+	 	userName = ""
+	}
 	pageSize, err := strconv.Atoi(c.Query("pagesize"))
 	if err != nil {
 		pageSize = -1
@@ -20,18 +24,19 @@ func GetUsers(c *gin.Context) {
 	if err != nil {
 		pageNum = -1
 	}
-	users := model.GetUsers(pageSize, pageNum)
+	users,code := model.GetUsers(userName,pageSize, pageNum)
 	c.JSON(http.StatusOK, gin.H{
-		"status": errmsg.SUCCESS,
+		"status": code,
 		"data":   users,
-		"msg":    errmsg.GetErrorMsg(errmsg.SUCCESS),
+		"msg":    errmsg.GetErrorMsg(code),
+		"total":  len(users),
 	})
 }
 
 // 查询单个用户
-func GetUser(c *gin.Context) {
-	// id, _ := strconv.Atoi(c.Param("id"))
-}
+// func GetUser(c *gin.Context) {
+	
+// }
 
 // 新增用户
 func AddUser(c *gin.Context) {
@@ -75,6 +80,7 @@ func DeleteUser(c *gin.Context) {
 			"status": errmsg.ERROR,
 			"msg":    errmsg.GetErrorMsg(errmsg.ERROR),
 		})
+		return
 	}
 
 	code := model.DeleteUser(id)
@@ -100,12 +106,14 @@ func EditUser(c *gin.Context) {
 			"status": code,
 			"msg":    errmsg.GetErrorMsg(code),
 		})
+		return;
 	}
 	if code = model.EditUser(user.ID, &user); code != errmsg.SUCCESS {
 		c.JSON(http.StatusOK, gin.H{
 			"status": code,
 			"msg":    errmsg.GetErrorMsg(code),
 		})
+		return;
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status": code,

@@ -37,26 +37,35 @@ func CreateUser(u *User) int {
 // 检查用户名是否存在
 func CheckUser(username string) (code int) {
 	var users User
-	DB.Select("id").Where("username = ?", username).Limit(1).First(&users)
+	err := DB.Select("id").Where("username = ?", username).Limit(1).First(&users)
 	fmt.Println(username)
-	if users.ID > 0 {
+	if err.Error != gorm.ErrRecordNotFound {
 		return errmsg.ERROR_USERNAME_USED
 	}
 	return errmsg.SUCCESS
 }
 
 // 查询所有用户
-func GetUsers(pageSize int, pageNum int) []User {
+func GetUsers(username string,pageSize int, pageNum int) ([]User,int) {
 	var users []User
 	offset := (pageNum - 1) * pageSize
 	if pageSize == -1 && pageNum == -1 {
 		offset = -1
 	}
-	err := DB.Limit(pageSize).Offset(offset).Find(&users).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil
+	var err error
+	// fmt.Println(username)
+	if(username != "") {
+		err = DB.Where("username LIKE ?", username+"%").Limit(pageSize).Offset(offset).Find(&users).Error
+		if err!= nil && err!= gorm.ErrRecordNotFound {
+			return nil,errmsg.ERROR
+		}	
+	}else{
+	err = DB.Limit(pageSize).Offset(offset).Find(&users).Error
 	}
-	return users
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil,errmsg.ERROR
+	}
+	return users,errmsg.SUCCESS
 }
 
 // 删除用户
@@ -72,9 +81,10 @@ func DeleteUser(id int) (code int) {
 // 编辑用户
 func EditUser(id uint, u *User) (code int) {
 	var user User
-	var maps = make(map[string]interface{})
+	var maps = make(map[string]any)
 	maps["username"] = u.Username
 	maps["role"] = u.Role
+	fmt.Println(id)
 	err := DB.Model(&user).Where("id =?", id).Updates(maps).Error
 	if err != nil {
 		return errmsg.ERROR
